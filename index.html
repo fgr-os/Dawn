@@ -10,7 +10,7 @@
   <meta http-equiv="Permissions-Policy"
     content="microphone=(self), camera=(), geolocation=(), sync-xhr=(), display-capture=(), usb=(), serial=(), payment=(), hid=()">
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; worker-src 'self' blob:; media-src 'self' blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src * data: blob:; connect-src 'self' https://ar.wikipedia.org https://cdn.jsdelivr.net blob: data:; frame-src 'self' blob:; object-src 'none'; upgrade-insecure-requests;">
+    content=" default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com blob:; worker-src 'self' blob: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; child-src 'self' blob: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; connect-src 'self' https://ar.wikipedia.org https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://tessdata.projectnaptha.com blob: data:; style-src 'self' 'unsafe-inline'; img-src * data: blob:; font-src 'self' data:; media-src 'self' blob:; frame-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; ">
   <link rel="canonical" href="https://fgr-os.github.io/Dawn/">
   <meta name="author" content="المؤسس">
   <meta name="theme-color" content="#3498db">
@@ -100,7 +100,9 @@
   #richeditor:empty::before {
     color: #f0f0f0;
   }
-  body.dark-mode #add {border:2px solid #fff;}
+  body.dark-mode #add {
+    border: 2px solid #fff;
+  }
   body.dark-mode #add,
   body.dark-mode #playlisticon {
     fill: #fff;
@@ -1828,11 +1830,11 @@
   .richtoolbar {
     overflow: auto;
     white-space: nowrap;
-    padding: 5px;
+    padding: 7px 14px;
     border: var(--cborder);
     border-radius: var(--bigradius);
     display: flex;
-    gap: 5px;
+    gap: 7px;
     width: 300px;
     position: absolute;
     bottom: 5px;
@@ -2181,8 +2183,8 @@
     width: 15px;
     height: 15px;
     border: 2px solid var(--dcolor);
-    outline:2px solid #fff;
-    box-shadow:var(--shadow);
+    outline: 2px solid #fff;
+    box-shadow: var(--shadow);
     border-radius: 50%;
     pointer-events: none;
     z-index: 10000;
@@ -2308,7 +2310,7 @@
     scroll-snap-type: x mandatory;
     max-height: 62vh;
     gap: 0 20px;
-    padding: 10px 20px 10px 250px;
+    padding: 10px 20px;
     margin: 0;
     scroll-behavior: smooth;
   }
@@ -2328,18 +2330,9 @@
     border: var(--cborder);
     position: relative;
     transition: 0.3s ease;
-    transform: rotateY(25deg);
-    margin: 0 0 0 -250px;
   }
   .game-card:hover {
-    box-shadow: 0 0 20px rgba(43, 233, 72, 0.4);
-    margin: 0 0 0 -100px;
-  }
-  .game-card:focus,
-  .game-card:focus-within {
-    box-shadow: 0 0 20px rgba(43, 233, 72, 0.4);
-    transform: rotateY(0deg);
-    margin: 0 0 0 0;
+    box-shadow: var(--shadow);
   }
   #rps button {
     border: var(--cborder);
@@ -3990,11 +3983,11 @@
       border-radius: 0;
     }
     .modal-content {
-      top:none;
+      top: none;
       bottom: 1vh;
       width: 98vw;
-      left:1vw;
-      right:1vw;
+      left: 1vw;
+      right: 1vw;
       min-width: auto;
       border-radius: var(--mainradius);
       max-height: 95vh;
@@ -4002,6 +3995,8 @@
     }
     .modaltab {
       padding: var(--secpadd);
+      width: calc(100% - 1vw);
+      margin: auto auto .5vh;
     }
     .rgbprofile {
       flex-direction: column;
@@ -4073,21 +4068,21 @@
       display: none;
     }
     .tab-content>.app-container {
-    bottom: 0;
-    right:0;
-    left:0;
-    border-radius:0;
-    padding: var(--secpadd);
-  }
-  .modal-content {
-    padding: 65px 7.5px 7.5px;
-  }
-  .modaltab {
-    width: 100%;
-    max-width: 750px;
-    border-radius:20px;
-    padding: var(--secpadd);
-  }
+      bottom: 0;
+      right: 0;
+      left: 0;
+      border-radius: 0;
+      padding: var(--secpadd);
+    }
+    .modal-content {
+      padding: 65px 7.5px 1vh;
+    }
+    .modaltab {
+      width: calc(100% - 15px);
+      max-width: 750px;
+      border-radius: 20px;
+      padding: var(--secpadd);
+    }
   }
   @media (pointer: coarse) {
     #fajr-cursor {
@@ -4557,7 +4552,7 @@
                 </svg>
                 <b>توليد عشوائي</b>
               </div>
-              <div data-id="5" class="app" onclick="opentab('ocrtextmatch')">
+              <div data-id="5" class="app" onclick="onerun('loadSavedResult');opentab('ocrtextmatch')">
                 <svg viewBox="0 0 512 512" width="100" title="camera">
                   <path
                     d="M512 144v288c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V144c0-26.5 21.5-48 48-48h88l12.3-32.9c7-18.7 24.9-31.1 44.9-31.1h125.5c20 0 37.9 12.4 44.9 31.1L376 96h88c26.5 0 48 21.5 48 48zM376 288c0-66.2-53.8-120-120-120s-120 53.8-120 120 53.8 120 120 120 120-53.8 120-120zm-32 0c0 48.5-39.5 88-88 88s-88-39.5-88-88 39.5-88 88-88 88 39.5 88 88z" />
@@ -4694,10 +4689,11 @@
               </div>
             </div>
             <div class="divider"></div>
-            <div class="search-container">
+            <div class="search-container flexno">
               <input type="text" id="NavsearchInput" class="search-box" placeholder="البحث في ملفاتك وانتاجك..."
                 onkeyup="filterwork();">
-              <div style="margin:10px 0 0;overflow:auto;padding:0 0 5px 5px;display:flex;gap:0 10px;">
+              <button onclick="opentab('filemanager')" class="conf-btn">+ رابط</button>
+              <div style="margin:10px 0 0;overflow:auto;padding:0 0 5px 5px;display:none;gap:0 10px;">
                 <b style="flex-shrink: 0;border:0px solid;padding:5px;">الروابط:</b>
                 <button onclick="opentab('filemanager')">إضافه</button>
                 <button id="linkbtn" class="tab-btn" onclick="setFilter('الكل', this)">الكل</button>
@@ -4786,7 +4782,7 @@
             </details>
           </div>
         </div>
-      </div>     
+      </div>
       <div id="extintion-container" class="modaltab">
         <h2>إنشاء وتحرير الإضافات</h2>
         <div class="flex" style="flex-direction:column;">
@@ -4794,7 +4790,8 @@
           <input type="text" id="snippet-title" placeholder="عنوان الأداة">
           <textarea id="snippet-code" style="min-height:290px;" placeholder="الصق الكود هنا..."></textarea>
           <button class="conf-btn" onclick="saveSnippet()"> تحديث وحفظ الأداة</button>
-          <p style="font-size: var(--mfont);text-align:center;"> ( يجب مراعاه الا تكون الاداه تحتوي alert,confirm,prompt او اي صلاحيه من صلاحيات المتصفح أو مكتبات خارجيه )</p>
+          <p style="font-size: var(--mfont);text-align:center;"> ( يجب مراعاه الا تكون الاداه تحتوي alert,confirm,prompt
+            او اي صلاحيه من صلاحيات المتصفح أو مكتبات خارجيه )</p>
         </div>
       </div>
       <div id="formdata-container" class="modaltab">
@@ -5294,20 +5291,19 @@
         <h2>إستخراج النصوص</h2>
         <fieldset>
           <legend>البيانات الأساسية</legend>
-          <div class="flex">
-            <select id="lang-select">
-              <option value="ara">لغة عربية فقط</option>
-              <option value="eng">لغة إنجليزية فقط</option>
-              <option value="ara+eng"> عربي + إنجليزي (تجريبي)</option>
-            </select>
+          <div class="flex" style="min-height:90px;">
             <div id="drop-zone" class="flex-center">
-              فتح ملف \ ملفات</div>
+              فتح ملف \ ملفات
+            </div>
           </div>
         </fieldset>
         <div id="ocrstatus" style="margin:15px 0;text-align:center;">مستعده لإستقبال ملفاتك ...</div>
-        <textarea id="ocrresult"></textarea>
-        <button hidden id="stop-btn">إيقاف 🛑</button>
-        <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+        <textarea id="ocrresult" placeholder="النتائج هتظهر هنا..."></textarea>
+        <div class="flex" style="gap:8px;margin-top:8px;">
+          <button id="copy-btn" type="button">📋 نسخ</button>
+          <button id="clear-btn" type="button" class="red-btn">🗑️ مسح</button>
+          <button hidden id="stop-btn" type="button">إيقاف 🛑</button>
+        </div>
         <p style="text-align: center;font-size: 13px;margin:5px 0;">تنبيه: قد تحدث بعض الأخطاء عند الإستخراج</p>
       </div>
       <div id="timesetting" class="modaltab">
@@ -5847,9 +5843,6 @@
           <legend>نتيجه الفحص الأمني</legend>
           <textarea id="reportOutput"></textarea>
         </fieldset>
-      </div>
-      <div id="brcketsresult" class="modaltab">
-        <h2>فحص الأقواس</h2>
         <fieldset>
           <legend>نتيجه فحص الأقواس </legend>
           <div id="checkResults"></div>
@@ -6107,7 +6100,21 @@
     <div id="timefull" tabindex="0">
       <div id="clocktext">جاري المزامنة...</div>
       <div id="preyresults"></div>
-      <div onclick="opentab('timesetting')" class="settingbtn">إعدادات الوقت</div>
+      <div class="flexno">
+        <div onclick="opentab('timesetting')" class="settingbtn">
+          <svg viewBox="0 0 640 512" width="15" fill="var(--gcolor)" title="user-clock">
+            <path
+              d="M496 224c-79.6 0-144 64.4-144 144s64.4 144 144 144 144-64.4 144-144-64.4-144-144-144zm64 150.3c0 5.3-4.4 9.7-9.7 9.7h-60.6c-5.3 0-9.7-4.4-9.7-9.7v-76.6c0-5.3 4.4-9.7 9.7-9.7h12.6c5.3 0 9.7 4.4 9.7 9.7V352h38.3c5.3 0 9.7 4.4 9.7 9.7v12.6zM320 368c0-27.8 6.7-54.1 18.2-77.5-8-1.5-16.2-2.5-24.6-2.5h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h347.1c-45.3-31.9-75.1-84.5-75.1-144zm-96-112c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128z" />
+          </svg>
+          إعدادات الوقت
+        </div>
+        <div onclick="openGuard()" class="settingbtn">
+          <svg viewBox="0 0 448 512" width="10" fill="var(--gcolor)" title="lock">
+            <path
+              d="M400 224h-24v-72C376 68.2 307.8 0 224 0S72 68.2 72 152v72H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-72c0-39.7 32.3-72 72-72s72 32.3 72 72v72z" />
+          </svg> حماية الشاشه
+        </div>
+      </div>
       <div onclick="onerun('renderDawnroutin');switchTab('tasksandroutin')" class="settingbtn">الروتين والتنبيهات
       </div>
     </div>
@@ -6332,10 +6339,6 @@
               <path
                 d="M480.07 96H160a160 160 0 1 0 114.24 272h91.52A160 160 0 1 0 480.07 96zM248 268a12 12 0 0 1-12 12h-52v52a12 12 0 0 1-12 12h-24a12 12 0 0 1-12-12v-52H84a12 12 0 0 1-12-12v-24a12 12 0 0 1 12-12h52v-52a12 12 0 0 1 12-12h24a12 12 0 0 1 12 12v52h52a12 12 0 0 1 12 12zm216 76a40 40 0 1 1 40-40 40 40 0 0 1-40 40zm64-96a40 40 0 1 1 40-40 40 40 0 0 1-40 40z" />
             </svg> الألعاب والتسليه </a>
-          <a onclick="openGuard()"> <svg viewBox="0 0 448 512" width="15" title="lock">
-              <path
-                d="M400 224h-24v-72C376 68.2 307.8 0 224 0S72 68.2 72 152v72H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-72c0-39.7 32.3-72 72-72s72 32.3 72 72v72z" />
-            </svg> حماية الشاشه</a>
           <a id="openBtn" onclick="openNav();" style="display:none;"> <svg viewBox="0 0 448 512" width="20"
               title="dice-d6">
               <path
@@ -6539,7 +6542,7 @@
             <path
               d="M16 224h416a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16H16a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16zm416 192H16a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm3.17-384H172.83A12.82 12.82 0 0 0 160 44.83v38.34A12.82 12.82 0 0 0 172.83 96h262.34A12.82 12.82 0 0 0 448 83.17V44.83A12.82 12.82 0 0 0 435.17 32zm0 256H172.83A12.82 12.82 0 0 0 160 300.83v38.34A12.82 12.82 0 0 0 172.83 352h262.34A12.82 12.82 0 0 0 448 339.17v-38.34A12.82 12.82 0 0 0 435.17 288z" />
           </svg>
-          <svg onclick="runUniversalScanner();opentab('saftyradar')" viewBox="0 0 512 512" width="40">
+          <svg onclick="checkCode();runUniversalScanner();opentab('saftyradar')" viewBox="0 0 512 512" width="40">
             <path
               d="M224,192a16,16,0,1,0,16,16A16,16,0,0,0,224,192ZM466.5,83.68l-192-80A57.4,57.4,0,0,0,256.05,0a57.4,57.4,0,0,0-18.46,3.67l-192,80A47.93,47.93,0,0,0,16,128C16,326.5,130.5,463.72,237.5,508.32a48.09,48.09,0,0,0,36.91,0C360.09,472.61,496,349.3,496,128A48,48,0,0,0,466.5,83.68ZM384,256H371.88c-28.51,0-42.79,34.47-22.63,54.63l8.58,8.57a16,16,0,1,1-22.63,22.63l-8.57-8.58C306.47,313.09,272,327.37,272,355.88V368a16,16,0,0,1-32,0V355.88c0-28.51-34.47-42.79-54.63-22.63l-8.57,8.58a16,16,0,0,1-22.63-22.63l8.58-8.57c20.16-20.16,5.88-54.63-22.63-54.63H128a16,16,0,0,1,0-32h12.12c28.51,0,42.79-34.47,22.63-54.63l-8.58-8.57a16,16,0,0,1,22.63-22.63l8.57,8.58c20.16,20.16,54.63,5.88,54.63-22.63V112a16,16,0,0,1,32,0v12.12c0,28.51,34.47,42.79,54.63,22.63l8.57-8.58a16,16,0,0,1,22.63,22.63l-8.58,8.57C329.09,189.53,343.37,224,371.88,224H384a16,16,0,0,1,0,32Zm-96,0a16,16,0,1,0,16,16A16,16,0,0,0,288,256Z" />
           </svg>
@@ -6547,11 +6550,7 @@
             <path
               d="M216 0h80c13.3 0 24 10.7 24 24v168h87.7c17.8 0 26.7 21.5 14.1 34.1L269.7 378.3c-7.5 7.5-19.8 7.5-27.3 0L90.1 226.1c-12.6-12.6-3.7-34.1 14.1-34.1H192V24c0-13.3 10.7-24 24-24zm296 376v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h146.7l49 49c20.1 20.1 52.5 20.1 72.6 0l49-49H488c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z" />
           </svg>
-          <svg onclick="checkCode();opentab('brcketsresult')" viewBox="0 0 512 512" width="40">
-            <path
-              d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z" />
-          </svg>
-          <svg onclick="deleteCurrentProj()" viewBox="0 0 448 512" width="40" fill="#e74c3c">
+          <svg onclick="deleteCurrentProj()" viewBox="0 0 448 512" width="40" style="color:var(--rcolor) !important">
             <path
               d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z" />
           </svg>
@@ -6890,60 +6889,263 @@
   <div id="snackbar"></div>
 </body>
 <script type="module">
-  import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs';
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs';
-  let worker = null;
-  let abortController = new AbortController();
+  const OCR_LANG = 'ara+eng';
+  const RESULT_DB = 'dawn_ocr';
+  const RESULT_STORE = 'results';
+  const CACHE_NAME = 'dawn-ocr-cache-v1';
+  const LIB_URLS = [
+    'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js',
+    'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/worker.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs',
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs'
+  ];
   const status = document.getElementById('ocrstatus');
   const result = document.getElementById('ocrresult');
   const uploader = document.getElementById('uploader');
-  const langSelect = document.getElementById('lang-select');
+  const copyBtn = document.getElementById('copy-btn');
+  const clearBtn = document.getElementById('clear-btn');
+  const stopBtn = document.getElementById('stop-btn');
+  let pdfjsLib = null;
+  let tesseractLoaded = false;
+  let worker = null;
+  let abortController = new AbortController();
+  function openDB() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(RESULT_DB, 1);
+      req.onupgradeneeded = () => {
+        const db = req.result;
+        if (!db.objectStoreNames.contains(RESULT_STORE)) {
+          db.createObjectStore(RESULT_STORE);
+        }
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+  async function dbSave(key, value) {
+    try {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(RESULT_STORE, 'readwrite');
+        tx.objectStore(RESULT_STORE).put(value, key);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+    } catch (e) { console.warn('DB save failed', e); }
+  }
+  async function dbGet(key) {
+    try {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(RESULT_STORE, 'readonly');
+        const req = tx.objectStore(RESULT_STORE).get(key);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    } catch (e) { return null; }
+  }
+  async function dbClear() {
+    try {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(RESULT_STORE, 'readwrite');
+        tx.objectStore(RESULT_STORE).clear();
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+    } catch (e) { console.warn(e); }
+  }
+  async function getCached(url) {
+    if (!('caches' in window)) return null;
+    try {
+      const cache = await caches.open(CACHE_NAME);
+      const res = await cache.match(url);
+      return res || null;
+    } catch { return null; }
+  }
+  async function putCached(url, response) {
+    if (!('caches' in window)) return;
+    try {
+      const cache = await caches.open(CACHE_NAME);
+      await cache.put(url, response.clone());
+    } catch (e) { console.warn('Cache put failed', e); }
+  }
+  async function fetchWithCache(url) {
+    const cached = await getCached(url);
+    if (cached) return cached;
+    const res = await fetch(url);
+    if (res.ok) putCached(url, res.clone());
+    return res;
+  }
+  async function loadPdfJs() {
+    if (pdfjsLib) return pdfjsLib;
+    status.innerText = "⏳ بجهّز مكتبة PDF...";
+    try {
+      const cached = await getCached(LIB_URLS[2]);
+      if (cached) {
+        const blob = await cached.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        pdfjsLib = await import(blobUrl);
+      } else {
+        pdfjsLib = await import(LIB_URLS[2]);
+        fetch(LIB_URLS[2]).then(r => putCached(LIB_URLS[2], r)).catch(() => { });
+      }
+    } catch {
+      pdfjsLib = await import(LIB_URLS[2]);
+    }
+    try {
+      const cachedWorker = await getCached(LIB_URLS[3]);
+      if (cachedWorker) {
+        const blob = await cachedWorker.blob();
+        pdfjsLib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(blob);
+      } else {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = LIB_URLS[3];
+        fetch(LIB_URLS[3]).then(r => putCached(LIB_URLS[3], r)).catch(() => { });
+      }
+    } catch {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = LIB_URLS[3];
+    }
+    return pdfjsLib;
+  }
+  async function loadTesseract() {
+    if (tesseractLoaded) return;
+    status.innerText = "⏳ بجهّز محرك OCR (عربي + إنجليزي)...";
+    let src = LIB_URLS[0];
+    try {
+      const cached = await getCached(LIB_URLS[0]);
+      if (cached) {
+        const blob = await cached.blob();
+        src = URL.createObjectURL(blob);
+      }
+    } catch { }
+    await new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = () => {
+        tesseractLoaded = true;
+        if (src.startsWith('blob:')) {
+          fetch(LIB_URLS[0]).then(r => putCached(LIB_URLS[0], r)).catch(() => { });
+        }
+        resolve();
+      };
+      s.onerror = () => reject(new Error('فشل تحميل Tesseract'));
+      document.head.appendChild(s);
+    });
+  }
   async function getWorker() {
-    const lang = langSelect.value;
     if (worker) {
       await worker.terminate();
       worker = null;
     }
-    worker = await Tesseract.createWorker(lang);
+    worker = await Tesseract.createWorker(OCR_LANG);
     return worker;
+  }
+  async function saveResult() {
+    await dbSave('text', result.value);
+    await dbSave('updated', Date.now());
+  }
+  async function loadSavedResult() {
+    const saved = await dbGet('text');
+    if (saved) result.value = saved;
   }
   const process = async (files) => {
     abortController = new AbortController();
+    stopBtn.hidden = false;
+    const fileArr = Array.from(files);
+    const hasPdf = fileArr.some(f => f.type === 'application/pdf');
+    const hasImage = fileArr.some(f => f.type.startsWith('image/'));
+    try {
+      if (hasPdf) await loadPdfJs();
+      if (hasImage || hasPdf) await loadTesseract();
+    } catch (err) {
+      console.error(err);
+      status.innerText = "❌ فشل تحميل المكتبات";
+      stopBtn.hidden = true;
+      return;
+    }
     const tWorker = await getWorker();
-    for (const file of Array.from(files)) {
+    for (const file of fileArr) {
       if (abortController.signal.aborted) break;
       try {
         if (file.type.startsWith('image/')) {
           status.innerText = `حاليا بقرأ: ${file.name}`;
           const { data: { text } } = await tWorker.recognize(file);
           result.value += `--- ${file.name} ---\n${text}\n\n`;
-        } else if (file.type === 'application/pdf') {
+          saveResult();
+        }
+        else if (file.type === 'application/pdf') {
           status.innerText = `PDF: ${file.name}`;
-          const pdf = await pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise;
+          const pdf = await pdfjsLib.getDocument({
+            data: await file.arrayBuffer()
+          }).promise;
           for (let i = 1; i <= pdf.numPages; i++) {
             if (abortController.signal.aborted) break;
             const page = await pdf.getPage(i);
             const viewport = page.getViewport({ scale: 1.5 });
             const canvas = document.createElement('canvas');
-            canvas.width = viewport.width; canvas.height = viewport.height;
-            await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            await page.render({
+              canvasContext: canvas.getContext('2d'),
+              viewport
+            }).promise;
+            status.innerText = `PDF: ${file.name} — صفحة ${i}/${pdf.numPages}`;
             const { data: { text } } = await tWorker.recognize(canvas);
             result.value += `--- ${file.name} (صفحة ${i}) ---\n${text}\n\n`;
+            saveResult();
           }
         }
-      } catch (err) { status.innerText = "حصلت غلطة!"; }
+      } catch (err) {
+        console.error(err);
+        status.innerText = "حصلت غلطة!";
+      }
     }
-    if (status && files.length > 0) {
-      let lastFile = files[files.length - 1];
-      status.innerText = `حاليا بقرأ: ${lastFile.name}`;
+    stopBtn.hidden = true;
+    if (!abortController.signal.aborted) {
+      status.innerText = "✅ انتهت المهمة!";
     }
-    status.innerText = "انتهت المهمة!";
   };
   document.getElementById('drop-zone').onclick = () => uploader.click();
   uploader.onchange = (e) => process(e.target.files);
-  document.getElementById('stop-btn').onclick = () => { abortController.abort(); status.innerText = "🛑 تمام وقفت!"; };
+  stopBtn.onclick = () => {
+    abortController.abort();
+    status.innerText = "🛑 تمام وقفت!";
+    stopBtn.hidden = true;
+  };
+  copyBtn.onclick = async () => {
+    if (!result.value.trim()) {
+      status.innerText = "⚠️ مفيش نتائج تنسخها!";
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(result.value);
+    } catch {
+      result.select();
+      document.execCommand('copy');
+    }
+    status.innerText = "📋 تم النسخ!";
+    setTimeout(() => {
+      if (!abortController.signal.aborted)
+        status.innerText = "مستعده لإستقبال ملفاتك ...";
+    }, 1500);
+  };
+  clearBtn.onclick = () => {
+    if (!result.value.trim()) return;
+    openSystemConfirm(
+      'مسح النتائج',
+      'متأكد إنك عايز تمسح كل النتائج؟',
+      async () => {
+        result.value = '';
+        await dbClear();
+        status.innerText = "🗑️ تم المسح";
+        setTimeout(() => status.innerText = "مستعده لإستقبال ملفاتك ...", 1200);
+      }
+    );
+  };
 </script>
 <script>
+  { }
+  //
   { }
   //اعدادات جانبيه
   {
@@ -18868,16 +19070,16 @@ ${childCount > 0 ? `<span class="count-badge">${childCount}</span>` : ""}
       };
     }
     function deleteSnippet(id) {
-    openSystemConfirm(
+      openSystemConfirm(
         "حذف أداة ⚠️",
         " اكيد هنمسح الأداة دي نهائياً؟",
         () => {
-            const transaction = db.transaction([STORE_NAME], "readwrite");
-            transaction.objectStore(STORE_NAME).delete(id);
-            transaction.oncomplete = loadSnippets;
+          const transaction = db.transaction([STORE_NAME], "readwrite");
+          transaction.objectStore(STORE_NAME).delete(id);
+          transaction.oncomplete = loadSnippets;
         }
-    );
-}
+      );
+    }
     function clearForm() {
       document.getElementById("snippet-id").value = "";
       document.getElementById("snippet-title").value = "";
@@ -18916,7 +19118,7 @@ ${childCount > 0 ? `<span class="count-badge">${childCount}</span>` : ""}
     pomodoro_init();
   }
   window.onload = initUI;
-  document.querySelectorAll('script').forEach(s => { let matches = s.textContent.match(/(?<=}\s*)\/\/[^\n]*\s*(?={)/g); if (matches) { let output = []; matches.forEach((c, i) => output.push(`${i + 1}: ${c.replace(/\/\/\s*/, '').trim()}`)); output.push(`إجمالي قدرات النظام ${matches.length} تحت السيطرة [نظام فجر لدعم المستخدم العربي]`); console.log(output.join('\n')); } });
+  //document.querySelectorAll('script').forEach(s => { let matches = s.textContent.match(/(?<=}\s*)\/\/[^\n]*\s*(?={)/g); if (matches) { let output = []; matches.forEach((c, i) => output.push(`${i + 1}: ${c.replace(/\/\/\s*/, '').trim()}`)); output.push(`إجمالي قدرات النظام ${matches.length} تحت السيطرة [نظام فجر لدعم المستخدم العربي]`); console.log(output.join('\n')); } });
   (function () { document.addEventListener('contextmenu', e => e.preventDefault()); document.onkeydown = e => { if (e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '0' || e.keyCode === 187 || e.keyCode === 189 || e.keyCode === 48)) { return true; } if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) { return false; } }; })();
   //const s=document.querySelectorAll('script');let f={};s.forEach((sc,i)=>{sc.innerText.split('\n').forEach((l,li)=>{let m=l.match(/(?:function\s+([a-zA-Z0-9_$]+)|([a-zA-Z0-9_$]+)\s*[:=]\s*function)/g);if(m){m.forEach(x=>{let n=x.replace('function','').replace('=','').replace(':','').trim();if(n){if(!f[n])f[n]={c:0,l:[]};f[n].c++;f[n].l.push(`سكريبت #${i+1} - سطر ${li+1}`);}});}});});console.log("=== الدوال المكررة ===");for(let [k,v] of Object.entries(f)){if(v.c>1)console.log(`الدالة: "${k}" | تكررت: ${v.c} مرات | الأماكن:`,v.l);}
 </script>
