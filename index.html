@@ -247,7 +247,7 @@
     display: none;
     position: absolute;
     background: var(--secbg);
-    min-width: 140px;
+    min-width: 150px;
     border-radius: var(--secradius);
     box-shadow: var(--shadow);
     z-index: 1000;
@@ -277,17 +277,12 @@
     text-align: right;
   }
   .context-menu .morelist {
-    border-right: 0px;
     transition: none;
-  }
-  .context-menu .morelist:focus,
-  .context-menu .morelist:focus-within {
-    border-right: 2px solid #ccc;
-    padding: 3px;
   }
   .context-menu .morelist:focus .detmore,
   .context-menu .morelist:focus-within .detmore {
     display: block;
+    margin-right: 5px;
   }
   .context-menu .menubtn {
     position: relative;
@@ -2698,6 +2693,7 @@
     border-radius: var(--secradius);
     overflow: auto;
     height: 100%;
+    min-height: 300px;
     padding: 5px 5px 40px;
     max-width: 400px;
     margin: 0 auto;
@@ -4728,18 +4724,18 @@
                   <div style="overflow:auto;white-space:nowrap;">
                     <label><input type="radio" name="mode"
                         data-ordername="@| الوضع الهادئ | للمحادثات السريعه والخفيفة "
-                        value="processMessage,handleInput,handleCorrection,sendMessage,delayedAnalyze,analyzelab,processInput">هادئ</label>
+                        value="processMessage,handleInput,sendMessage,delayedAnalyze,analyzelab,processInput">هادئ</label>
                     <label><input type="radio" name="mode"
                         data-ordername="@| وضع العناية الشخصيه | للرعايه والاهتمام اليومي "
-                        value="processMessage,handleInput,handleCorrection,sendMessage,delayedAnalyze,analyzelab">عناية
+                        value="processMessage,handleInput,sendMessage,delayedAnalyze,analyzelab">عناية
                       شخصية</label>
                     <label><input type="radio" name="mode" data-ordername="@| وضع التحليل | للتعمق في البيانات "
-                        value="processMessage,sendMessage,handleCorrection,delayedAnalyze,analyzelab,processInput,processText,extanalyze,lawsradarSearch,searchAcrossForms,executeJustice">تحليل</label>
+                        value="processMessage,sendMessage,delayedAnalyze,analyzelab,processInput,processText,extanalyze,lawsradarSearch,searchAcrossForms,executeJustice">تحليل</label>
                     <label><input type="radio" name="mode" data-ordername="@| وضع الدراسه | دعم دراسي اكثر "
-                        value="processMessage,handleInput,handleCorrection,sendMessage,processInput,processText,superAnalyze,extanalyze,checkResult,lawsradarSearch,searchAcrossForms">دراسه</label>
+                        value="processMessage,handleInput,sendMessage,processInput,processText,superAnalyze,extanalyze,checkResult,lawsradarSearch,searchAcrossForms">دراسه</label>
                     <label><input type="radio" name="mode"
                         data-ordername="@| الوضع الشامل | جميع القدرات الذهنيه للنظام"
-                        value="processMessage,handleInput,handleCorrection,sendMessage,delayedAnalyze,analyzelab,processInput,processText,superAnalyze,extanalyze,checkResult,lawsradarSearch,searchAcrossForms,executeJustice">شامل</label>
+                        value="processMessage,handleInput,sendMessage,delayedAnalyze,analyzelab,processInput,processText,superAnalyze,extanalyze,checkResult,lawsradarSearch,searchAcrossForms,executeJustice">شامل</label>
                     <font id="savedModes"></font>
                     <button id="saveCustomBtn">حفظ كوضع جديد</button>
                   </div>
@@ -4752,7 +4748,6 @@
                 <label><input type="checkbox" class="dalalah" id="lawsradarSearch">إشتقاق قوانين</label>
                 <label><input type="checkbox" class="dalalah" id="sendMessage">الردود المتعلمه</label>
                 <label><input type="checkbox" class="dalalah" id="checkResult">وضع الاملاء</label>
-                <label><input type="checkbox" class="dalalah" id="handleCorrection">تصحيح النص</label>
                 <label><input type="checkbox" class="dalalah" id="extanalyze">استخراج بيانات</label>
                 <label><input type="checkbox" class="dalalah" id="superAnalyze">تذكير إعراب</label>
                 <label><input type="checkbox" class="dalalah" id="processText">إستخراج المهم</label>
@@ -5845,7 +5840,7 @@
         </fieldset>
         <fieldset>
           <legend>نتيجه فحص الأقواس </legend>
-          <div id="checkResults"></div>
+          <textarea id="checkResults"></textarea>
         </fieldset>
       </div>
       <div id="generatedata" class="modaltab">
@@ -6368,8 +6363,15 @@
   </main>
   <div id="customMenu" class="context-menu">
     <button class="context-menu-item" id="search-btn" onclick="search()">بحث خارجي</button>
-    <button class="context-menu-item" onclick="analyzeText()">تحليل النص</button>
-    <button class="context-menu-item" onclick="codeget()">تحديد لغه الترميز</button>
+    <div class="morelist" tabindex="0">
+      <button class="context-menu-item menubtn">النص</button>
+      <button class="context-menu-item detmore" onclick="handleKeyboardCorrection()">تصحيح لوحه المفاتيح</button>
+      <button class="context-menu-item detmore" onclick="handleFrancoConversion()">تحويل من الفرانكو</button>
+      <button class="context-menu-item detmore" onclick="analyzeText()">تحليل النص</button>
+      <button class="context-menu-item detmore" onclick="codeget()">تحديد لغه الترميز</button>
+      <button class="context-menu-item detmore" onclick="startAnalysis();showAndMove('Humanfy')">كشف الطابع
+        الشخصي</button>
+    </div>
     <div class="morelist" tabindex="0">
       <button class="context-menu-item menubtn">تفاعل</button>
       <button class="context-menu-item detmore" onclick="processSecret();showAndMove('faraohres')">تشفير فرعوني</button>
@@ -6390,7 +6392,6 @@
       <button class="context-menu-item detmore" onclick="processBulkData()">رسم وتحليل</button>
       <button class="context-menu-item detmore" onclick="GeoGabrarender()">رسم معادلة جبريه</button>
     </div>
-    <div class="context-menu-item" onclick="startAnalysis();showAndMove('Humanfy')">الطابع الشخصي</div>
     <div id="toolsContainer">
     </div>
   </div>
@@ -8302,7 +8303,6 @@
         "executeJustice": ["قوانين", "لائحه", "لوائح", "جزاء", "عداله"],
         "lawsradarSearch": ["اشتقاق", "قانون", "رادار", "استخرج", "استخراج", "حساب", "ناتج"],
         "checkResult": ["املاء", "تهجئه", "خطا"],
-        "handleCorrection": ["تصحيح", "تعديل", "تصويب", "ana", "enta", "enty", "eh", "feen", "ezayak", "ezayek", "el", "ya", "ya3ny", "begad", "shokran", "mashi", "mashy", "isa", "yarab", "7abibi", "7abibty", "tmam", "kwayes", "kwayesa", "aslan", "leh", "kda", "keda", "f3lan", "bgd", "wenta", "enty", "enti", "hagat", "7agat", "tab", "tayeb", "tayebin"],
         "extanalyze": ["رقم", "ارقام", "روابط", "رابط", "link", "links", "url", "http", "https", "ايميلات", "ايميل", "بريد", "email", "e-mail", "mail", "هواتف", "هاتف", "تليفون", "موبايل", "جوال", "phone", "mobile", "tel", "ارقام قوميه", "رقم قومى", "بطاقه", "هويه", "id", "national id", "عناوين IP", "ip", "ip address", "اوقات", "وقت", "ساعه", "time", "clock", "هاشتاجات", "هاشتاج", "hashtag", "tag", "معرفات", "معرف", "mention", "منشن", "user", "احداثيات", "احداثيات", "gps", "location", "موقع", "ملفات", "ملف", "file", "attachment", "مرفق", "مبالغ", "مبلغ", "سعر", "تكلفه", "money", "price", "cost", "جنيه", "دولار", "معادلات", "معادله", "equation", "math", "الوان", "لون", "color", "colour", "hex", "rgb", "احداثيات ثلاثيه", "3d", "3dcoords", "three d", "اكواد", "كود", "باركود", "barcode", "code", "درجات حراره", "درجه حراره", "temperature", "temp", "احجام ملفات", "حجم ملف", "filesize", "size", "mb", "gb", "تواريخ", "تاريخ", "date", "سنوات ميلاديه", "سنه ميلاديه", "ميلادى", "gregorian", "ad", "سنوات هجريه", "سنه هجريه", "هجرى", "hijri", "ah"],
         "superAnalyze": ["اعراب", "نحو", "استخرج", "استخراج"],
         "processText": ["خلاصه", "باختصار", "بالتالى", "لذلك", "نتيجه", "مهم", "رئيسى", "جوهرى", "اساسى", "اولويه", "نسعى", "نهدف", "مستقبل", "يجب", "ضرورى", "اهم", "دراسه", "بحث", "علم", "تعلم", "فكره", "تطوير", "نجاح", "هدف", "خطه", "استراتيجيه", "تنفيذ", "اداء", "عمل", "مبادره", "صحه", "غذاء", "نظام", "رياضه", "بدن", "حياه", "توازن", "طاقه", "راحه", "عقل", "وعى", "تغيير", "فرصه", "تحدى", "قيمه", "تاثير", "نمو", "استمرار", "دعم", "حل"],
@@ -8641,7 +8641,7 @@
       "اوقية": "اوقية", "أوقية": "اوقية", "oz": "اوقية",
       "ساعه": "ساعه", "ساعة": "ساعه", "hr": "ساعه", "hour": "ساعه", "h": "ساعه",
       "دقيقه": "دقيقه", "دقيقة": "دقيقه", "min": "دقيقه", "minute": "دقيقه",
-      "ثانيه": "ثانيه", "ثانية": "ثانيه", "sec": "ثانيه", "second": "ثانيه", "s": "ثانيه",
+      "ثانيه": "ثانيه", "ثانية": "ثانيه", "sec": "ثانيه", "second": "ثانيه", "s": "ثانيه", "ثانيه": "ث",
       "يوم": "يوم", "day": "يوم", "d": "يوم",
       "أسبوع": "أسبوع", "اسبوع": "أسبوع", "week": "أسبوع", "wk": "أسبوع",
       "شهر": "شهر", "month": "شهر", "mo": "شهر",
@@ -8680,58 +8680,47 @@
   }
   //التصحيح النصي للفرانكو ولوحه المفاتيح
   {
-    function autoFixText(text) {
-      const hasArabic = /[\u0600-\u06FF]/.test(text);
-      const knownFrancoWords = ["ana", "enta", "enty", "eh", "feen", "ezayak", "ezayek", "el", "ya", "ya3ny", "begad", "shokran", "mashi", "mashy", "isa", "yarab", "7abibi", "7abibty", "tmam", "kwayes", "kwayesa", "aslan", "leh", "kda", "keda", "f3lan", "bgd", "wenta", "enty", "enti", "hagat", "7agat", "tab", "tayeb", "tayebin"];
-      const isFrancoLikely = knownFrancoWords.some((word) =>
-        text.toLowerCase().includes(word)
-      );
-      const hasOnlyEnglish = /^[a-zA-Z0-9\s.,?'"!@#$%^&*()_+-=|;:'"<>`~]+$/.test(
-        text
-      );
-      if (hasOnlyEnglish && isFrancoLikely) {
-        return convertText(text);
-      } else if (hasOnlyEnglish && !isFrancoLikely) {
-        return simpleCorrection(text);
-      } else if (hasArabic) {
-        return null;
-      } else {
-        return simpleCorrection(text);
-      }
-    }
-    function simpleCorrection(text) {
+    function handleKeyboardCorrection() {
+      const inputField = UI.editor;
+      const text = inputField.value.trim();
+      if (!text) return;
       const map = { q: "ض", w: "ص", e: "ث", r: "ق", t: "ف", y: "غ", u: "ع", i: "ه", o: "خ", p: "ح", a: "ش", s: "س", d: "ي", f: "ب", g: "ل", h: "ا", j: "ت", k: "ن", l: "م", z: "ئ", x: "ء", c: "ؤ", v: "ر", b: "لا", n: "ى", m: "ة", ",": "و", ".": "ز", "/": "ظ", "'": "ط", "]": "د", "[": "ج", ";": "ك", "`": "ذ" };
       const correctedText = [...text]
         .map((char) => map[char.toLowerCase()] || char)
         .join("");
-      return `دا قصدك بالعربي؟ <input value='${correctedText}'>`;
+      inputField.value = correctedText;
     }
-    function convertText(text) {
+    function handleFrancoConversion() {
+      const inputField = UI.editor;
+      const text = inputField.value.trim();
+      if (!text) return;
       const words = text.split(/\s+/);
       const convertedWords = words.map((word) => {
-        if (!/[a-zA-Z]/.test(word)) {
-          return word;
-        }
-        const replacements = [{ from: /kh/gi, to: "خ" }, { from: /gh/gi, to: "غ" }, { from: /sh/gi, to: "ش" }, { from: /th/gi, to: "ث" }, { from: /dh/gi, to: "ذ" }, { from: /ou/gi, to: "و" }, { from: /ea/gi, to: "يا" }, { from: /ie/gi, to: "ي" }, { from: /ai/gi, to: "أي" }, { from: /ay/gi, from: /3/gi, to: "ع" }, { from: /5/gi, to: "خ" }, { from: /2/gi, to: "أ" }, { from: /4/gi, to: "ش" }, { from: /6/gi, to: "ط" }, { from: /7/gi, to: "ح" }, { from: /8/gi, to: "ق" }, { from: /9/gi, to: "ص" }, { from: /a/gi, to: "ا" }, { from: /b/gi, to: "ب" }, { from: /c/gi, to: "ك" }, { from: /d/gi, to: "د" }, { from: /e/gi, to: "ي" }, { from: /f/gi, to: "ف" }, { from: /g/gi, to: "ج" }, { from: /h/gi, to: "ه" }, { from: /i/gi, to: "ي" }, { from: /j/gi, to: "ج" }, { from: /k/gi, to: "ك" }, { from: /l/gi, to: "ل" }, { from: /m/gi, to: "م" }, { from: /n/gi, to: "ن" }, { from: /o/gi, to: "و" }, { from: /p/gi, to: "ب" }, { from: /q/gi, to: "ق" }, { from: /r/gi, to: "ر" }, { from: /s/gi, to: "س" }, { from: /t/gi, to: "ت" }, { from: /u/gi, to: "و" }, { from: /v/gi, to: "ف" }, { from: /w/gi, to: "و" }, { from: /x/gi, to: "كس" }, { from: /y/gi, to: "ي" }, { from: /z/gi, to: "ز" }];
+        if (!/[a-zA-Z0-9]/.test(word)) return word;
+        const replacements = [
+          { from: /kh/gi, to: "خ" }, { from: /gh/gi, to: "غ" }, { from: /sh/gi, to: "ش" },
+          { from: /th/gi, to: "ث" }, { from: /dh/gi, to: "ذ" }, { from: /ou/gi, to: "و" },
+          { from: /ea/gi, to: "يا" }, { from: /ie/gi, to: "ي" }, { from: /ai/gi, to: "أي" },
+          { from: /ay/gi, to: "ي" }, { from: /3/g, to: "ع" }, { from: /5/g, to: "خ" },
+          { from: /2/g, to: "أ" }, { from: /4/g, to: "ش" }, { from: /6/g, to: "ط" },
+          { from: /7/g, to: "ح" }, { from: /8/g, to: "ق" }, { from: /9/g, to: "ص" },
+          { from: /a/gi, to: "ا" }, { from: /b/gi, to: "ب" }, { from: /c/gi, to: "ك" },
+          { from: /d/gi, to: "د" }, { from: /e/gi, to: "ي" }, { from: /f/gi, to: "ف" },
+          { from: /g/gi, to: "ج" }, { from: /h/gi, to: "ه" }, { from: /i/gi, to: "ي" },
+          { from: /j/gi, to: "ج" }, { from: /k/gi, to: "ك" }, { from: /l/gi, to: "ل" },
+          { from: /m/gi, to: "م" }, { from: /n/gi, to: "ن" }, { from: /o/gi, to: "و" },
+          { from: /p/gi, to: "ب" }, { from: /q/gi, to: "ق" }, { from: /r/gi, to: "ر" },
+          { from: /s/gi, to: "س" }, { from: /t/gi, to: "ت" }, { from: /u/gi, to: "و" },
+          { from: /v/gi, to: "ف" }, { from: /w/gi, to: "و" }, { from: /x/gi, to: "كس" },
+          { from: /y/gi, to: "ي" }, { from: /z/gi, to: "ز" }
+        ];
         let newWord = word;
         replacements.forEach((rule) => {
           newWord = newWord.replace(rule.from, rule.to);
         });
         return newWord;
       });
-      return `دا قصدك بالفرانكو؟ <input value='${convertedWords.join(" ")}'>`;
-    }
-    function handleCorrection() {
-      const text = UI.editor.value.trim();
-      if (text === "") {
-        return;
-      }
-      const correctedText = autoFixText(text);
-      if (correctedText) {
-        UI.replay.insertAdjacentHTML("beforeend", correctedText);
-      } else {
-        return false;
-      }
+      inputField.value = convertedWords.join(" ");
     }
   }
   //رفع ملفات وعرضها
@@ -10072,9 +10061,32 @@ ${analyticsHTML}
         let matches = foundIds.filter((id) => f.includes(id));
         if (matches.length >= 2) {
           let d = derive(f).map((x) => `<button class="derive-txt" onclick="opentab('Lawsepector');parseFormula(this)">↩ اشتقاق: ${toText(x)}</button>`).join("");
-          out.innerHTML += `<details style="width:100%;max-width:fit-content;" class="res-card"><summary class="lawget">📌 لقيت قانون: ${toText(f)}</summary><button class="derive-txt" onclick="opentab('Lawsepector');parseFormula(this)">↩ اشتقاق: ${toText(f)}</button> ${d}</details>`;
+          let textInput = txt;
+          let givensHTML = extractGivenData(f, textInput);
+          out.innerHTML += `
+      <details style="width:100%;max-width:fit-content;" class="res-card">
+        <summary class="lawget">📌 لقيت قانون: ${toText(f)}</summary>
+        ${givensHTML}
+        <button class="derive-txt" onclick="opentab('Lawsepector');parseFormula(this)">↩ اشتقاق: ${toText(f)}</button> 
+        ${d}
+      </details>`;
         }
       });
+    }
+    function extractGivenData(law, text) {
+      let varIds = law.filter(x => !["=", "*", "/", "+", "-"].includes(x));
+      let givenChips = [];
+      varIds.forEach(id => {
+        let word = idW[id];
+        if (!word) return;
+        let regex = new RegExp(`${word}[^0-9]*([0-9]+(?:\\.[0-9]+)?)`, 'i');
+        let match = text.match(regex);
+        if (match && match[1]) {
+          let val = match[1];
+          givenChips.push(`<span style="display:inline-block; padding:4px 10px; margin:2px; background:var(--secbg); border-radius:15px; font-size:0.85em;">📌 ${word} = ${val}</span>`);
+        }
+      });
+      return givenChips.length > 0 ? `<div class="given-box" style="display:flex; overflow-x:auto; gap:5px; padding:5px 0; white-space:nowrap;">${givenChips.join('')}</div>` : '';
     }
   }
   //تحديد الجمل الهامه
@@ -10377,7 +10389,7 @@ ${analyticsHTML}
       const code = UI.richeditor.innerText;
       const lines = code.split('\n');
       const results = UI.checkResults;
-      results.innerHTML = "";
+      results.value = "";
       let openBraces = 0;
       let closeBraces = 0;
       let errors = [];
@@ -10393,12 +10405,12 @@ ${analyticsHTML}
         }
       });
       if (errors.length > 0) {
-        results.innerHTML = errors.map(err => `⚠️ ${err}<br>`).join("");
+        results.value = errors.map(err => `⚠️ ${err}`).join("\n");
       }
       if (openBraces !== closeBraces) {
-        results.innerHTML += `<br>🔴 <b>الأقواس مش متوازنة:</b> (مفتوح: ${openBraces} | مغلق: ${closeBraces})`;
+        results.value += `\n🔴 الأقواس مش متوازنة: (مفتوح: ${openBraces} | مغلق: ${closeBraces})`;
       } else if (errors.length === 0) {
-        results.innerHTML = "<span style='color:green'>✅ كودك زي الفل!</span>";
+        results.value = "كل الأقواس متساويه في العدد (مفتوح ومقفول)";
       }
     }
   }
@@ -10518,6 +10530,36 @@ ${analyticsHTML}
         name: "محاولة Root",
         type: "critical",
         msg: "خطر! الكود يحاول كسر حماية النظام."
+      },
+      {
+        regex: /innerHTML|document\.write|outerHTML/g,
+        name: "حقن الـ DOM (DOM-based XSS)",
+        type: "critical",
+        msg: "التقاط استخدام لـ innerHTML أو كتابة مباشرة في الصفحة، خطر حقن أكواد خبيثة."
+      },
+      {
+        regex: /window\.location|fetch\s*\(|axios\./g,
+        name: "استدعاء شبكي أو توجيه",
+        type: "warning",
+        msg: "التقاط طلبات شبكية أو إعادة توجيه قد تسرب بيانات المستخدم."
+      },
+      {
+        regex: /__proto__|constructor\.prototype/g,
+        name: "التلاعب بـ Prototype",
+        type: "critical",
+        msg: "التقاط محاولة Prototype Pollution لتعديل سلوك الكائنات العامة."
+      },
+      {
+        regex: /localStorage\.(setItem|getItem)|sessionStorage\.(setItem|getItem)/g,
+        name: "استخدام التخزين المحلي (Local Storage)",
+        type: "warning",
+        msg: "التقاط تعامل مع الـ LocalStorage أو SessionStorage؛ تأكد من عدم حفظ بيانات حساسة."
+      },
+      {
+        regex: /document\.cookie/g,
+        name: "الوصول للكوكيز (Cookies)",
+        type: "critical",
+        msg: "التقاط قراءة أو كتابة مباشرة لملفات تعريف الارتباط (Cookies)."
       }
     ];
     function runUniversalScanner() {
