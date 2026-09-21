@@ -6499,10 +6499,12 @@
       <div class="app-container">
         <div class="musiccontrol">
           <select id="inst">
-            <option value="triangle">🎹 بيانو</option>
-            <option value="square">👾 ريترو</option>
-            <option value="sawtooth">🎸 إلكترو</option>
-          </select>
+    <option value="sine">موجة نقية (Sine)</option>
+    <option value="square">إلكتروني (Square)</option>
+    <option value="sawtooth">حاد (Sawtooth)</option>
+    <option value="triangle">دافئ (Triangle)</option>
+    <option value="drum">🥁 طبلة / إيقاع (Percussion)</option>
+</select>
           <select id="size" onchange="init()">
             <option value="4">4×4</option>
             <option value="6" selected>6×6</option>
@@ -12545,17 +12547,45 @@ ${childCount > 0 ? `<span class="count-badge">${childCount}</span>` : ""}
       }
       stop();
     }
-    function playN(f) {
-      if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
-      let o = ctx.createOscillator(),
-        g = ctx.createGain();
-      o.type = document.getElementById("inst").value;
-      o.frequency.value = 150 + f * 55;
-      o.connect(g);
-      g.connect(ctx.destination);
-      o.start();
-      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
-      o.stop(ctx.currentTime + 0.4);
+    function playN(f, instType) {
+        if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        if (instType === "drum") {
+            let bufferSize = ctx.sampleRate * 0.1;
+            let buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            let data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+            
+            let noise = ctx.createBufferSource();
+            noise.buffer = buffer;
+            
+            let filter = ctx.createBiquadFilter();
+            filter.type = "lowpass";
+            filter.frequency.value = 800 + f * 50;
+            
+            let gain = ctx.createGain();
+            gain.gain.setValueAtTime(1, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+            
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+            
+            noise.start();
+            return;
+        }
+        
+        let o = ctx.createOscillator(),
+            g = ctx.createGain();
+        o.type = instType || document.getElementById("inst").value;
+        o.frequency.value = 150 + f * 55;
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start();
+        g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
+        o.stop(ctx.currentTime + 0.4);
     }
     function run() {
       if (!playing) return;
