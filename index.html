@@ -4811,7 +4811,9 @@
         <h2>إقتراح وصفات</h2>
         <fieldset>
           <legend>المكونات</legend>
-          <div id="ingredientsGrid"></div>
+          <input type="text" id="ingredientSearch" placeholder="ابحث عن مكون..." />
+          <br>
+          <div id="ingredientsGrid" style="max-height:130px;overflow:auto;"></div>
         </fieldset>
         <div id="cookresultsArea">
           <p style="text-align:center;margin:30px 0 20px;">هنختار المكونات اللي عندنا علشان اقترحلك وصفات</p>
@@ -6499,12 +6501,12 @@
       <div class="app-container">
         <div class="musiccontrol">
           <select id="inst">
-    <option value="sine">موجة نقية (Sine)</option>
-    <option value="square">إلكتروني (Square)</option>
-    <option value="sawtooth">حاد (Sawtooth)</option>
-    <option value="triangle">دافئ (Triangle)</option>
-    <option value="drum">🥁 طبلة / إيقاع (Percussion)</option>
-</select>
+            <option value="sine">موجة نقية (Sine)</option>
+            <option value="square">إلكتروني (Square)</option>
+            <option value="sawtooth">حاد (Sawtooth)</option>
+            <option value="triangle">دافئ (Triangle)</option>
+            <option value="drum">🥁 طبلة / إيقاع (Percussion)</option>
+          </select>
           <select id="size" onchange="init()">
             <option value="4">4×4</option>
             <option value="6" selected>6×6</option>
@@ -12548,44 +12550,37 @@ ${childCount > 0 ? `<span class="count-badge">${childCount}</span>` : ""}
       stop();
     }
     function playN(f, instType) {
-        if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
-        
-        if (instType === "drum") {
-            let bufferSize = ctx.sampleRate * 0.1;
-            let buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-            let data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = Math.random() * 2 - 1;
-            }
-            
-            let noise = ctx.createBufferSource();
-            noise.buffer = buffer;
-            
-            let filter = ctx.createBiquadFilter();
-            filter.type = "lowpass";
-            filter.frequency.value = 800 + f * 50;
-            
-            let gain = ctx.createGain();
-            gain.gain.setValueAtTime(1, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-            
-            noise.connect(filter);
-            filter.connect(gain);
-            gain.connect(ctx.destination);
-            
-            noise.start();
-            return;
+      if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if (instType === "drum") {
+        let bufferSize = ctx.sampleRate * 0.1;
+        let buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        let data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
         }
-        
-        let o = ctx.createOscillator(),
-            g = ctx.createGain();
-        o.type = instType || document.getElementById("inst").value;
-        o.frequency.value = 150 + f * 55;
-        o.connect(g);
-        g.connect(ctx.destination);
-        o.start();
-        g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
-        o.stop(ctx.currentTime + 0.4);
+        let noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+        let filter = ctx.createBiquadFilter();
+        filter.type = "lowpass";
+        filter.frequency.value = 800 + f * 50;
+        let gain = ctx.createGain();
+        gain.gain.setValueAtTime(1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        noise.start();
+        return;
+      }
+      let o = ctx.createOscillator(),
+        g = ctx.createGain();
+      o.type = instType || document.getElementById("inst").value;
+      o.frequency.value = 150 + f * 55;
+      o.connect(g);
+      g.connect(ctx.destination);
+      o.start();
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
+      o.stop(ctx.currentTime + 0.4);
     }
     function run() {
       if (!playing) return;
@@ -18921,23 +18916,15 @@ ${childCount > 0 ? `<span class="count-badge">${childCount}</span>` : ""}
   }
   //اقتراح وصفات
   {
-    const ingredientsLib = { 1: "بيض", 2: "طماطم", 3: "بصل", 4: "زيت", 5: "مكرونة", 6: "ثوم", 7: "جبنة", 8: "ملح", 9: "فلفل أخضر", 10: "ليمون" };
+    const ingredientsLib = {
+      1: "بيض", 2: "طماطم", 3: "بصل", 4: "زيت", 5: "ملح", 6: "فلفل أسود", 7: "ثوم", 8: "ليمون", 9: "كمون", 10: "بهارات مشكلة", 11: "مكرونة", 12: "أرز", 13: "عيش", 14: "بطاطس", 15: "دقيق", 16: "شعرية", 17: "فراخ", 18: "لحمة مفرومة", 19: "لحمة قطع", 20: "سمك", 21: "تونة", 22: "جبنة بيضاء", 23: "جبنة رومي", 24: "موزاريلا", 25: "زبادي", 26: "لبن", 27: "فلفل أخضر", 28: "فلفل ألوان", 29: "جزر", 30: "كوسة", 31: "باذنجان", 32: "بامية", 33: "فاصوليا", 34: "لوبيا", 35: "سبانخ", 36: "ملوخية", 37: "خيار", 38: "خس", 39: "جرجير", 40: "بقدونس", 41: "كزبرة", 42: "شبت", 43: "زيت زيتون", 44: "زبدة", 45: "كريمة", 46: "صلصة", 47: "معجون طماطم", 48: "مستردة", 49: "مايونيز", 50: "عسل", 51: "سكر", 52: "خل", 53: "مشروم", 54: "زيتون", 55: "ذرة", 56: "بسلة", 57: "فول مدمس", 58: "عدس", 59: "حمص", 60: "فلفل حار", 61: "زنجبيل", 62: "قرفة", 63: "شوفان", 64: "مكسرات", 65: "زبيب", 66: "جوز هند", 67: "شوكولاتة", 68: "فانيليا", 69: "بيكنج بودر", 70: "خميرة", 71: "لحم بقري", 72: "لحم ضأن", 73: "كبدة", 74: "سجق", 75: "سلامي", 76: "بيبروني", 77: "تركي", 78: "جمبري", 79: "كاليماري", 80: "بلطي", 81: "بوري", 82: "سلمون", 83: "ماكريل", 84: "جمبري مجمد", 85: "سمك فيليه", 86: "جبنة شيدر", 87: "جبنة فيتا", 88: "جبنة كريمي", 89: "جبنة بارميزان", 90: "جبنة ريكوتا", 91: "لبنة", 92: "قشطة", 93: "زبدة فول سوداني", 94: "طحينة", 95: "دبس رمان", 96: "عجينة بيتزا", 97: "عجينة رقيقة", 98: "عيش برجر", 99: "عيش توست", 100: "عيش صمون", 101: "عيش فينو", 102: "عيش بلدي", 103: "عيش شامي", 104: "بقسماط", 105: "نشا", 106: "سميد", 107: "برغل", 108: "كينوا", 109: "أرز بني", 110: "شوفان مطحون", 111: "كاكاو", 112: "كاكاو خام", 113: "شوكولاتة داكنة", 114: "شوكولاتة بالحليب", 115: "كريمة خفق", 116: "جيلاتين", 117: "كراميل", 118: "لون طعام", 119: "فستق", 120: "لوز", 121: "كاجو", 122: "عين جمل", 123: "بندق", 124: "سمسم", 125: "حبة البركة", 126: "زعتر", 127: "إكليل الجبل", 128: "زعتر أخضر", 129: "نعناع", 130: "ريحان", 131: "كرفس", 132: "كراث", 133: "بصل أخضر", 134: "خرشوف", 135: "لفت", 136: "شمندر", 137: "قرنبيط", 138: "بروكلي", 139: "كرفس أخضر", 140: "فطر", 141: "زيت ذرة", 142: "زيت عباد الشمس", 143: "زيت جوز الهند", 144: "سمنة", 145: "مارجرين", 146: "كاتشب", 147: "صوص حار", 148: "صوص باربكيو", 149: "صوص سيزر", 150: "خل تفاح",
+    };
     const recipesLib = [
-      { id: 1, name: "بيض بالطماطم السريع", items: [1, 2, 4] },
-      { id: 2, name: "شكشوكة أصلية", items: [1, 2, 3, 4, 8] },
-      { id: 3, name: "مكرونة بالصلصة", items: [5, 2, 6, 4, 8] },
-      { id: 4, name: "صينية بيض بالجبنة", items: [1, 7, 4, 8] },
-      { id: 5, name: "سلطة خضراء خفيفة", items: [2, 10, 8] }
+      { id: 1, name: "بيض بالطماطم السريع", items: [1, 2, 4, 5] }, { id: 2, name: "شكشوكة أصلية", items: [1, 2, 3, 4, 5, 27] }, { id: 3, name: "عجة بالجبنة", items: [1, 22, 4, 5, 41] }, { id: 4, name: "فول مدمس بالزيت والليمون", items: [57, 43, 8, 9] }, { id: 5, name: "جبنة بيضاء بالطماطم والخيار", items: [22, 2, 37, 43] }, { id: 6, name: "بيض مقلي بالزبدة", items: [1, 44, 5, 6] }, { id: 7, name: "أومليت بالجبنة الرومي", items: [1, 23, 4, 5] }, { id: 8, name: "مكرونة بالصلصة", items: [11, 2, 7, 4, 5, 47] }, { id: 9, name: "مكرونة بشاميل", items: [11, 26, 15, 44, 18, 5] }, { id: 10, name: "مكرونة بالتونة", items: [11, 21, 2, 43, 54] }, { id: 11, name: "مكرونة بالخضار", items: [11, 29, 30, 55, 56, 4] }, { id: 12, name: "مكرونة بالبشاميل والفراخ", items: [11, 17, 26, 15, 44] }, { id: 13, name: "أرز بالخلطة", items: [12, 18, 2, 47, 10, 4] }, { id: 14, name: "أرز باللبن", items: [12, 26, 51, 45] }, { id: 15, name: "أرز بالشعرية", items: [12, 16, 4, 5] }, { id: 16, name: "أرز بخاري بالفراخ", items: [12, 17, 29, 3, 10, 4] }, { id: 17, name: "بطاطس مقلية", items: [14, 4, 5] }, { id: 18, name: "بطاطس بالفرن بالتوابل", items: [14, 43, 10, 7, 5] }, { id: 19, name: "بطاطس بوريه", items: [14, 26, 44, 5, 6] }, { id: 20, name: "صينية بطاطس باللحمة", items: [14, 19, 2, 47, 4, 5] }, { id: 21, name: "فراخ مشوية بالليمون والثوم", items: [17, 8, 7, 43, 9, 10] }, { id: 22, name: "فراخ بانيه", items: [17, 15, 1, 4, 5, 6] }, { id: 23, name: "فراخ بالكاري", items: [17, 25, 3, 7, 10, 4] }, { id: 24, name: "فراخ بالفرن مع الخضار", items: [17, 29, 30, 14, 43, 10] }, { id: 25, name: "شيش طاووق", items: [17, 25, 8, 7, 10, 43] }, { id: 26, name: "كفتة مشوية", items: [18, 3, 40, 10, 9, 5] }, { id: 27, name: "كفتة بالطماطم", items: [18, 2, 47, 3, 4, 5] }, { id: 28, name: "لحمة بالبصل والفلفل", items: [19, 3, 28, 4, 5, 6] }, { id: 29, name: "طاجن لحمة بالبطاطس", items: [19, 14, 2, 47, 4, 5] }, { id: 30, name: "لحمة مشوية", items: [19, 43, 7, 9, 10, 5] }, { id: 31, name: "بامية بالطماطم", items: [32, 2, 7, 47, 4, 5] }, { id: 32, name: "ملوخية", items: [36, 7, 41, 4, 5] }, { id: 33, name: "سبانخ بالبصل", items: [35, 3, 7, 4, 5, 9] }, { id: 34, name: "كوسة بالبشاميل", items: [30, 18, 26, 15, 44] }, { id: 35, name: "محشي كوسة", items: [30, 12, 2, 47, 4, 5] }, { id: 36, name: "فاصوليا بيضاء بالصلصة", items: [33, 2, 47, 3, 4, 5] }, { id: 37, name: "لوبيا بالطماطم", items: [34, 2, 47, 3, 4, 5] }, { id: 38, name: "باذنجان مقلي", items: [31, 15, 4, 5] }, { id: 39, name: "باذنجان بالبشاميل", items: [31, 18, 26, 15, 44] }, { id: 40, name: "سمك مشوي", items: [20, 8, 7, 43, 9, 10] }, { id: 41, name: "سمك مقلي", items: [20, 15, 4, 5, 9] }, { id: 42, name: "سلطة تونة", items: [21, 37, 2, 3, 43, 8] }, { id: 43, name: "سلطة خضراء", items: [38, 37, 2, 43, 8, 5] }, { id: 44, name: "تبولة", items: [40, 2, 3, 8, 43, 5] }, { id: 45, name: "سلطة زبادي بالخيار", items: [25, 37, 7, 5] }, { id: 46, name: "حمص بالطحينة", items: [59, 25, 8, 7, 43] }, { id: 47, name: "شوربة عدس", items: [58, 3, 29, 7, 9, 4] }, { id: 48, name: "شوربة خضار", items: [29, 14, 30, 3, 4, 5] }, { id: 49, name: "شوربة فراخ بالشعرية", items: [17, 16, 29, 3, 5, 6] }, { id: 50, name: "شوربة طماطم", items: [2, 3, 7, 45, 4, 5] }, { id: 51, name: "بيض بالبسطرمة", items: [1, 71, 44, 5, 6] }, { id: 52, name: "شكشوكة بالجبنة", items: [1, 2, 3, 22, 4, 5] }, { id: 53, name: "بيض مسلوق", items: [1, 5, 6] }, { id: 54, name: "أومليت بالخضار", items: [1, 2, 27, 3, 4, 5] }, { id: 55, name: "بيض بالبصل", items: [1, 3, 44, 5, 6] }, { id: 56, name: "فول بالطماطم", items: [57, 2, 47, 4, 5, 9] }, { id: 57, name: "فول بالبصل والليمون", items: [57, 3, 8, 43, 9, 5] }, { id: 58, name: "فول بالطحينة", items: [57, 94, 8, 7, 43] }, { id: 59, name: "فول بالبيض", items: [57, 1, 4, 5, 9] }, { id: 60, name: "طعمية", items: [57, 40, 3, 7, 41, 9] }, { id: 61, name: "فلافل بالطحينة", items: [59, 40, 3, 7, 94] }, { id: 62, name: "فتة حمص", items: [59, 25, 8, 7, 43, 5] }, { id: 63, name: "حمص بالليمون", items: [59, 8, 7, 43, 5, 9] }, { id: 64, name: "حمص باللحمة", items: [59, 18, 7, 43, 5, 9] }, { id: 65, name: "بابا غنوج", items: [31, 94, 8, 7, 43, 5] }, { id: 66, name: "متبل باذنجان", items: [31, 2, 3, 43, 5, 6] }, { id: 67, name: "باذنجان بالطحينة", items: [31, 94, 8, 7, 43] }, { id: 68, name: "مسقعة", items: [31, 18, 2, 47, 4, 5] }, { id: 69, name: "مسقعة بالبشاميل", items: [31, 18, 26, 15, 44, 5] }, { id: 70, name: "كوسة محشي", items: [30, 12, 2, 47, 4, 5] }, { id: 71, name: "كوسة بالطماطم", items: [30, 2, 7, 47, 4, 5] }, { id: 72, name: "كوسة مقلي", items: [30, 15, 4, 5] }, { id: 73, name: "بامية باللحمة", items: [32, 19, 2, 47, 7, 5] }, { id: 74, name: "بامية بالفراخ", items: [32, 17, 2, 47, 7, 5] }, { id: 75, name: "ملوخية بالفراخ", items: [36, 17, 7, 41, 4, 5] }, { id: 76, name: "ملوخية باللحمة", items: [36, 19, 7, 41, 4, 5] }, { id: 77, name: "سبانخ باللحمة", items: [35, 19, 3, 7, 4, 5] }, { id: 78, name: "سبانخ بالجبنة", items: [35, 22, 3, 44, 5, 6] }, { id: 79, name: "فاصوليا باللحمة", items: [33, 18, 2, 47, 4, 5] }, { id: 80, name: "فاصوليا خضراء", items: [33, 2, 3, 4, 5, 9] }, { id: 81, name: "لوبيا باللحمة", items: [34, 18, 2, 47, 4, 5] }, { id: 82, name: "لوبيا بالفراخ", items: [34, 17, 2, 47, 4, 5] }, { id: 83, name: "بسلة باللحمة", items: [56, 18, 2, 47, 4, 5] }, { id: 84, name: "بسلة بالجزر", items: [56, 29, 3, 44, 5, 6] }, { id: 85, name: "ذرة بالزبدة", items: [55, 44, 5, 6] }, { id: 86, name: "ذرة بالليمون", items: [55, 8, 43, 5, 60] }, { id: 87, name: "خضار سوتيه", items: [30, 29, 27, 3, 43, 5] }, { id: 88, name: "خضار مشوي", items: [31, 30, 28, 2, 43, 5] }, { id: 89, name: "قرنبيط مقلي", items: [137, 15, 4, 5, 6] }, { id: 90, name: "قرنبيط بالبشاميل", items: [137, 26, 15, 44, 5, 6] }, { id: 91, name: "بروكلي بالثوم", items: [138, 7, 43, 5, 6] }, { id: 92, name: "بروكلي بالجبنة", items: [138, 24, 26, 44, 5] }, { id: 93, name: "خرشوف بالليمون", items: [134, 8, 43, 5, 7] }, { id: 94, name: "لفت باللحمة", items: [135, 19, 2, 47, 4, 5] }, { id: 95, name: "شمندر بالزبادي", items: [136, 25, 7, 8, 5] }, { id: 96, name: "كرفس بالبشاميل", items: [131, 26, 15, 44, 5, 6] }, { id: 97, name: "كراث بالطماطم", items: [132, 2, 7, 43, 5, 6] }, { id: 98, name: "بصل أخضر بالبيض", items: [133, 1, 44, 5, 6] }, { id: 99, name: "فطر بالزبدة", items: [140, 44, 7, 5, 6] }, { id: 100, name: "فطر بالكريمة", items: [140, 45, 7, 44, 5, 6] }, { id: 101, name: "مشروم بالجبنة", items: [53, 24, 44, 7, 5] }, { id: 102, name: "مشروم بالفراخ", items: [53, 17, 45, 7, 5, 6] }, { id: 103, name: "شوربة مشروم", items: [53, 3, 26, 15, 44, 5] }, { id: 104, name: "شوربة كرفس", items: [131, 3, 29, 4, 5, 6] }, { id: 105, name: "شوربة بروكلي", items: [138, 3, 26, 44, 5, 6] }, { id: 106, name: "شوربة قرنبيط", items: [137, 3, 26, 44, 5, 6] }, { id: 107, name: "شوربة فراخ بالكريمة", items: [17, 45, 3, 15, 44, 5] }, { id: 108, name: "شوربة لحمة", items: [19, 3, 29, 4, 5, 6] }, { id: 109, name: "شوربة سمك", items: [20, 3, 29, 4, 5, 8] }, { id: 110, name: "شوربة جمبري", items: [78, 3, 29, 4, 5, 8] }, { id: 111, name: "فراخ بالفرن بالبطاطس", items: [17, 14, 3, 43, 10, 5] }, { id: 112, name: "فراخ بالفرن بالخضار", items: [17, 29, 30, 27, 43, 10] }, { id: 113, name: "فراخ بصلصة الصويا", items: [17, 7, 61, 50, 4, 5] }, { id: 114, name: "فراخ بالليمون", items: [17, 8, 7, 43, 5, 6] }, { id: 115, name: "فراخ بالعسل", items: [17, 50, 7, 43, 5, 6] }, { id: 116, name: "فراخ بالباربكيو", items: [17, 148, 7, 43, 5, 6] }, { id: 117, name: "فراخ بالكاري والكريمة", items: [17, 45, 3, 7, 10, 5] }, { id: 118, name: "فراخ بالجبنة", items: [17, 24, 26, 44, 5, 6] }, { id: 119, name: "فراخ بانيه بالسمسم", items: [17, 15, 1, 124, 4, 5] }, { id: 120, name: "فراخ بانيه بالبقسماط", items: [17, 15, 1, 104, 4, 5] }, { id: 121, name: "كفتة بالبشاميل", items: [18, 26, 15, 44, 5, 6] }, { id: 122, name: "كفتة بالبطاطس", items: [18, 14, 2, 47, 4, 5] }, { id: 123, name: "كفتة بالجبنة", items: [18, 24, 3, 40, 5, 6] }, { id: 124, name: "كفتة بالطحينة", items: [18, 94, 8, 7, 43, 5] }, { id: 125, name: "كفتة بالفرن", items: [18, 3, 40, 10, 4, 5] }, { id: 126, name: "كفتة دجاج", items: [17, 3, 40, 10, 4, 5] }, { id: 127, name: "لحمة بالبشاميل", items: [19, 26, 15, 44, 5, 6] }, { id: 128, name: "لحمة بالفرن", items: [19, 3, 43, 10, 5, 6] }, { id: 129, name: "لحمة بالكريمة", items: [19, 45, 3, 44, 5, 6] }, { id: 130, name: "لحمة بالباربكيو", items: [19, 148, 3, 43, 5, 6] }, { id: 131, name: "كبدة اسكندراني", items: [73, 27, 7, 8, 4, 5] }, { id: 132, name: "كبدة بالبصل", items: [73, 3, 7, 4, 5, 6] }, { id: 133, name: "سجق بالطماطم", items: [74, 2, 47, 3, 4, 5] }, { id: 134, name: "سجق بالبصل والفلفل", items: [74, 3, 27, 4, 5, 6] }, { id: 135, name: "سلامي بالجبنة", items: [75, 24, 26, 44, 5, 6] }, { id: 136, name: "بيبروني بالجبنة", items: [76, 24, 26, 44, 5, 6] }, { id: 137, name: "تركي بالجبنة", items: [77, 86, 26, 44, 5, 6] }, { id: 138, name: "سمك بوري مشوي", items: [81, 8, 7, 43, 9, 10] }, { id: 139, name: "سمك بلطي مقلي", items: [80, 15, 4, 5, 9] }, { id: 140, name: "سمك سلمون مشوي", items: [82, 8, 7, 43, 9, 10] }, { id: 141, name: "سمك ماكريل مشوي", items: [83, 8, 7, 43, 9, 10] }, { id: 142, name: "جمبري بالثوم", items: [78, 7, 43, 8, 5, 60] }, { id: 143, name: "جمبري بانيه", items: [78, 15, 1, 104, 4, 5] }, { id: 144, name: "جمبري بالكريمة", items: [78, 45, 7, 44, 5, 6] }, { id: 145, name: "كاليماري مقرمش", items: [79, 15, 1, 104, 4, 5] }, { id: 146, name: "سمك فيليه بانيه", items: [85, 15, 1, 104, 4, 5] }, { id: 147, name: "سمك بالكريمة", items: [85, 45, 7, 44, 5, 6] }, { id: 148, name: "سمك بالطحينة", items: [85, 94, 8, 7, 43, 5] }, { id: 149, name: "سمك بالفرن بالخضار", items: [85, 29, 30, 27, 43, 10] }, { id: 150, name: "سي فود مشكل", items: [78, 79, 85, 7, 43, 8] },
     ];
     let selectedIds = [];
     const grid = document.getElementById('ingredientsGrid');
-    for (let [id, name] of Object.entries(ingredientsLib)) {
-      const btn = document.createElement('button');
-      btn.className = 'ingredient-btn';
-      btn.innerText = name;
-      btn.onclick = () => toggleIngredient(parseInt(id), btn);
-      grid.appendChild(btn);
-    }
+    const searchInput = document.getElementById('ingredientSearch');
     const resultsArea = document.getElementById('cookresultsArea');
     recipesLib.forEach(recipe => {
       const card = document.createElement('div');
@@ -18946,9 +18933,28 @@ ${childCount > 0 ? `<span class="count-badge">${childCount}</span>` : ""}
       card.style.display = 'none';
       resultsArea.appendChild(card);
     });
+    function renderIngredients(keyword = '') {
+      grid.innerHTML = '';
+      const normalized = keyword.trim().toLowerCase();
+      for (let [id, name] of Object.entries(ingredientsLib)) {
+        if (normalized && !name.toLowerCase().includes(normalized)) continue;
+        const btn = document.createElement('button');
+        btn.className = 'ingredient-btn';
+        btn.innerText = name;
+        const numId = parseInt(id);
+        if (selectedIds.includes(numId)) btn.classList.add('conf-btn');
+        btn.onclick = () => toggleIngredient(numId, btn);
+        grid.appendChild(btn);
+      }
+    }
     function toggleIngredient(id, btnElement) {
-      if (selectedIds.includes(id)) { selectedIds = selectedIds.filter(item => item !== id); btnElement.classList.remove('conf-btn'); }
-      else { selectedIds.push(id); btnElement.classList.add('conf-btn'); }
+      if (selectedIds.includes(id)) {
+        selectedIds = selectedIds.filter(item => item !== id);
+        btnElement.classList.remove('conf-btn');
+      } else {
+        selectedIds.push(id);
+        btnElement.classList.add('conf-btn');
+      }
       updateRecipes();
     }
     function updateRecipes() {
@@ -18968,6 +18974,10 @@ ${childCount > 0 ? `<span class="count-badge">${childCount}</span>` : ""}
         }
       });
     }
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => renderIngredients(e.target.value));
+    }
+    renderIngredients();
   }
   //مساعد الكتابه
   {
@@ -18981,7 +18991,47 @@ ${childCount > 0 ? `<span class="count-badge">${childCount}</span>` : ""}
       { name: "سيرة ذاتية ملخصة", steps: "1. مين أنت باختصار شديد.\n2. شغفك أو خبرتك الأساسية.\n3. إنجاز بارز.\n4. طريقة للتواصل معك." },
       { name: "إشعار طوارئ / تنبيه", steps: "1. الكلمة المفتاحية (تنبيه / عاجل).\n2. المشكلة بوضوح وسرعة.\n3. التصرف المطلوب فوراً." },
       { name: "وصف منتج", steps: "1. اسم المنتج وميزته الكبرى.\n2. المواصفات الفنية باختصار.\n3. الفائدة اللي هيعود بيها على المشتري." },
-      { name: "محتوى فيديو / سكربت", steps: "1. أول 5 ثواني (Hook ناري عشان ما يقفلش الفيديو).\n2. صلب الموضوع بسلاسة.\n3. الخاتمة السريعة." }
+      { name: "محتوى فيديو / سكربت", steps: "1. أول 5 ثواني (Hook ناري عشان ما يقفلش الفيديو).\n2. صلب الموضوع بسلاسة.\n3. الخاتمة السريعة." },
+      { name: "قصة قصيرة", steps: "1. بداية تشد القارئ.\n2. صراع أو مشكلة.\n3. ذروة الأحداث.\n4. حل ونهاية مؤثرة." },
+      { name: "رسالة شكر", steps: "1. تحية دافئة.\n2. سبب الشكر بالتحديد.\n3. أثر التصرف عليك.\n4. خاتمة ودودة." },
+      { name: "رسالة اعتذار", steps: "1. الاعتراف بالخطأ.\n2. توضيح السبب بدون مبررات واهية.\n3. تعويض أو حل.\n4. وعد بعدم التكرار." },
+      { name: "خطاب تقديم لوظيفة", steps: "1. التعريف بنفسك.\n2. لماذا هذه الوظيفة تحديداً.\n3. مؤهلاتك ومهاراتك.\n4. دعوة للمقابلة." },
+      { name: "خبر صحفي", steps: "1. العنوان الرئيسي (الحدث).\n2. المقدمة (5W: من، ماذا، متى، أين، لماذا).\n3. التفاصيل والتصريحات.\n4. الخاتمة بمعلومات إضافية." },
+      { name: "تقرير مدرسي", steps: "1. المقدمة والهدف.\n2. المنهجية أو الطريقة.\n3. النتائج والتحليل.\n4. التوصيات والخاتمة." },
+      { name: "ملخص كتاب", steps: "1. معلومات الكتاب والمؤلف.\n2. الفكرة الرئيسية.\n3. أهم النقاط.\n4. رأيك الشخصي." },
+      { name: "مراجعة منتج", steps: "1. تعريف بالمنتج.\n2. الإيجابيات.\n3. السلبيات.\n4. التقييم النهائي." },
+      { name: "دعوة مناسبة", steps: "1. المناسبة والتاريخ.\n2. المكان.\n3. تفاصيل الحضور.\n4. تأكيد الحضور." },
+      { name: "إعلان وظيفة", steps: "1. المسمى الوظيفي.\n2. المهام والمسؤوليات.\n3. الشروط والمؤهلات.\n4. طريقة التقديم." },
+      { name: "رسالة تحفيزية", steps: "1. جملة قوية تبدأ بها.\n2. قصة نجاح أو مثال.\n3. درس مستفاد.\n4. دعوة للعمل." },
+      { name: "نص إعلاني إذاعي", steps: "1. جملة خطاف صوتية.\n2. المشكلة والحل.\n3. الميزة التنافسية.\n4. رقم التواصل أو الموقع." },
+      { name: "قصة أطفال", steps: "1. الشخصيات والخلفية.\n2. الموقف البسيط.\n3. العقدة.\n4. الحل والقيمة التربوية." },
+      { name: "سكربت إعلان تلفزيوني", steps: "1. المشهد الافتتاحي.\n2. ظهور المنتج.\n3. الفائدة والاستخدام.\n4. جملة الإغلاق." },
+      { name: "رسالة تهنئة", steps: "1. المناسبة.\n2. التهنئة القلبية.\n3. دعاء أو أمنية.\n4. توقيع شخصي." },
+      { name: "دعوة لحضور ويبينار", steps: "1. الموضوع.\n2. المتحدث.\n3. التاريخ والوقت.\n4. رابط التسجيل." },
+      { name: "وصف قناة يوتيوب", steps: "1. من أنت وماذا تقدم.\n2. نوعية المحتوى.\n3. مواعيد النشر.\n4. روابط السوشيال." },
+      { name: "سكربت بودكاست", steps: "1. المقدمة والترحيب.\n2. الموضوع الرئيسي.\n3. أسئلة أو محاور.\n4. الخاتمة ودعوة للمتابعة." },
+      { name: "إعلان مبيعات", steps: "1. العرض.\n2. المدة.\n3. الشروط.\n4. دعوة للشراء." },
+      { name: "تغريدة قصيرة", steps: "1. الجملة المفتاحية.\n2. الفكرة الأساسية.\n3. هاشتاج مناسب." },
+      { name: "منشور فيسبوك", steps: "1. الجملة الأولى الجاذبة.\n2. القصة أو المعلومة.\n3. سؤال تفاعلي.\n4. هاشتاجات." },
+      { name: "منشور لينكد إن", steps: "1. فكرة احترافية.\n2. تجربة شخصية.\n3. درس مستفاد.\n4. دعوة للنقاش." },
+      { name: "منشور إنستجرام", steps: "1. جملة قصيرة مؤثرة.\n2. وصف مصور.\n3. هاشتاجات متعددة.\n4. دعوة للحفظ والمشاركة." },
+      { name: "سكربت ريلز", steps: "1. أول 3 ثواني خطاف بصري.\n2. تطور سريع.\n3. ذروة.\n4. خاتمة ودعوة للمتابعة." },
+      { name: "تيك توك وصف", steps: "1. جملة مشوقة.\n2. معلومة أو ترفيه.\n3. هاشتاجات ترند.\n4. دعوة للتفاعل." },
+      { name: "رسالة متابعة عمل", steps: "1. التذكير بالمحادثة السابقة.\n2. الهدف من المتابعة.\n3. عرض قيمة إضافية.\n4. سؤال واضح." },
+      { name: "رسالة اعتذار للعميل", steps: "1. الاعتذار المباشر.\n2. شرح المشكلة.\n3. الحل المقترح.\n4. تعويض مناسب." },
+      { name: "شكوى رسمية", steps: "1. البيانات والموضوع.\n2. وصف المشكلة.\n3. الأدلة.\n4. المطلب الواضح." },
+      { name: "طلب عرض سعر", steps: "1. التعريف بالنفس.\n2. المطلوب بالتحديد.\n3. المواصفات.\n4. الموعد النهائي للرد." },
+      { name: "رد على شكوى", steps: "1. الترحيب والشكر.\n2. الاعتراف بالمشكلة.\n3. الحل والخطوات.\n4. التأكيد على الجودة." },
+      { name: "دعوة للتعاون", steps: "1. التعريف بالجهة.\n2. فكرة التعاون.\n3. الفائدة المشتركة.\n4. الخطوة التالية." },
+      { name: "عرض تقديمي", steps: "1. العنوان والفكرة.\n2. المشكلة.\n3. الحل.\n4. الفوائد والتوصيات." },
+      { name: "خطة عمل مختصرة", steps: "1. الهدف.\n2. الخطوات التنفيذية.\n3. الموارد المطلوبة.\n4. مؤشرات النجاح." },
+      { name: "تحليل SWOT", steps: "1. نقاط القوة.\n2. نقاط الضعف.\n3. الفرص.\n4. التهديدات." },
+      { name: "سيرة شخصية للأطفال", steps: "1. من أنا.\n2. ما أحبه.\n3. حلمي.\n4. رسالة لأصدقائي." },
+      { name: "رسالة حب", steps: "1. المشاعر الأولى.\n2. ذكرى مشتركة.\n3. ما يعنيه لك.\n4. وعد أو أمنية." },
+      { name: "نعي", steps: "1. اسم الفقيد.\n2. نبذة عن حياته.\n3. مناقبه.\n4. دعاء ومواساة." },
+      { name: "خطبة قصيرة", steps: "1. الحمد والثناء.\n2. الموضوع.\n3. الأدلة أو الأمثلة.\n4. الخاتمة والدعاء." },
+      { name: "مقال رأي", steps: "1. طرح القضية.\n2. وجهة نظرك.\n3. الأدلة والحجج.\n4. الخلاصة والدعوة." },
+      { name: "مذكرة داخلية", steps: "1. المرسل والمرسل إليه.\n2. الموضوع.\n3. التفاصيل.\n4. الإجراء المطلوب." }
     ];
     const container = document.getElementById('buttonsContainer');
     const infoBox = document.getElementById('infoBox');
