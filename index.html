@@ -4732,10 +4732,10 @@
                     <label><input type="radio" name="mode" data-ordername="@| وضع التحليل | للتعمق في البيانات "
                         value="processMessage,sendMessage,delayedAnalyze,analyzelab,processInput,processText,extanalyze,lawsradarSearch,searchAcrossForms,executeJustice">تحليل</label>
                     <label><input type="radio" name="mode" data-ordername="@| وضع الدراسه | دعم دراسي اكثر "
-                        value="processMessage,handleInput,sendMessage,processInput,processText,superAnalyze,extanalyze,checkResult,lawsradarSearch,searchAcrossForms">دراسه</label>
+                        value="processMessage,handleInput,sendMessage,processInput,processText,extanalyze,lawsradarSearch,searchAcrossForms">دراسه</label>
                     <label><input type="radio" name="mode"
                         data-ordername="@| الوضع الشامل | جميع القدرات الذهنيه للنظام"
-                        value="processMessage,handleInput,sendMessage,delayedAnalyze,analyzelab,processInput,processText,superAnalyze,extanalyze,checkResult,lawsradarSearch,searchAcrossForms,executeJustice">شامل</label>
+                        value="processMessage,handleInput,sendMessage,delayedAnalyze,analyzelab,processInput,processText,extanalyze,lawsradarSearch,searchAcrossForms,executeJustice">شامل</label>
                     <font id="savedModes"></font>
                     <button id="saveCustomBtn">حفظ كوضع جديد</button>
                   </div>
@@ -4747,9 +4747,7 @@
                 <label><input type="checkbox" class="dalalah" id="processMessage">إسلوب النداء</label>
                 <label><input type="checkbox" class="dalalah" id="lawsradarSearch">إشتقاق قوانين</label>
                 <label><input type="checkbox" class="dalalah" id="sendMessage">الردود المتعلمه</label>
-                <label><input type="checkbox" class="dalalah" id="checkResult">وضع الاملاء</label>
                 <label><input type="checkbox" class="dalalah" id="extanalyze">استخراج بيانات</label>
-                <label><input type="checkbox" class="dalalah" id="superAnalyze">تذكير إعراب</label>
                 <label><input type="checkbox" class="dalalah" id="processText">إستخراج المهم</label>
                 <label><input type="checkbox" class="dalalah" id="analyzelab">فحص تحاليل</label>
                 <label><input type="checkbox" class="dalalah" id="delayedAnalyze">فحص طبي</label>
@@ -6130,6 +6128,8 @@
         <div id="suggestsresultsCount"></div>
         <div class="tools-container" id="suggestedtoolsContainer"></div>
       </div>
+      <div id="rekonahow" class="replay"></div>
+      <div id="dicnop" class="replay"></div>
       <div id="heavystatus" class="replay">جاهز للعمل...</div>
       <div id="resultsdisplayarea" class="replay"></div>
       <div id="memoryresultCount" class="replay"></div>
@@ -6376,8 +6376,10 @@
     </div>
     <div class="morelist" tabindex="0">
       <button class="context-menu-item menubtn">تفاعل</button>
-      <button class="context-menu-item detmore" onclick="processSecret();showAndMove('faraohres')">تشفير فرعوني</button>
+      <button class="context-menu-item detmore" onclick="checkResult()">فحص إملاء</button>
+      <button class="context-menu-item detmore" onclick="superAnalyze()">فحص إعرابي</button>
       <button class="context-menu-item detmore" onclick="processAndSpeak()">سماع النص</button>
+      <button class="context-menu-item detmore" onclick="processSecret();showAndMove('faraohres')">تشفير فرعوني</button>
       <button class="context-menu-item detmore" id="startButton" onclick="startGeneration()">أتكلم بإسلوبك</button>
     </div>
     <div class="morelist" tabindex="0">
@@ -8306,9 +8308,7 @@
         "sendMessage": [""],
         "executeJustice": ["قوانين", "لائحه", "لوائح", "جزاء", "عداله"],
         "lawsradarSearch": ["اشتقاق", "قانون", "رادار", "استخرج", "استخراج", "حساب", "ناتج"],
-        "checkResult": ["املاء", "تهجئه", "خطا"],
         "extanalyze": ["رقم", "ارقام", "روابط", "رابط", "link", "links", "url", "http", "https", "ايميلات", "ايميل", "بريد", "email", "e-mail", "mail", "هواتف", "هاتف", "تليفون", "موبايل", "جوال", "phone", "mobile", "tel", "ارقام قوميه", "رقم قومى", "بطاقه", "هويه", "id", "national id", "عناوين IP", "ip", "ip address", "اوقات", "وقت", "ساعه", "time", "clock", "هاشتاجات", "هاشتاج", "hashtag", "tag", "معرفات", "معرف", "mention", "منشن", "user", "احداثيات", "احداثيات", "gps", "location", "موقع", "ملفات", "ملف", "file", "attachment", "مرفق", "مبالغ", "مبلغ", "سعر", "تكلفه", "money", "price", "cost", "جنيه", "دولار", "معادلات", "معادله", "equation", "math", "الوان", "لون", "color", "colour", "hex", "rgb", "احداثيات ثلاثيه", "3d", "3dcoords", "three d", "اكواد", "كود", "باركود", "barcode", "code", "درجات حراره", "درجه حراره", "temperature", "temp", "احجام ملفات", "حجم ملف", "filesize", "size", "mb", "gb", "تواريخ", "تاريخ", "date", "سنوات ميلاديه", "سنه ميلاديه", "ميلادى", "gregorian", "ad", "سنوات هجريه", "سنه هجريه", "هجرى", "hijri", "ah"],
-        "superAnalyze": ["اعراب", "نحو", "استخرج", "استخراج"],
         "processText": ["خلاصه", "باختصار", "بالتالى", "لذلك", "نتيجه", "مهم", "رئيسى", "جوهرى", "اساسى", "اولويه", "نسعى", "نهدف", "مستقبل", "يجب", "ضرورى", "اهم", "دراسه", "بحث", "علم", "تعلم", "فكره", "تطوير", "نجاح", "هدف", "خطه", "استراتيجيه", "تنفيذ", "اداء", "عمل", "مبادره", "صحه", "غذاء", "نظام", "رياضه", "بدن", "حياه", "توازن", "طاقه", "راحه", "عقل", "وعى", "تغيير", "فرصه", "تحدى", "قيمه", "تاثير", "نمو", "استمرار", "دعم", "حل"],
         "analyzelab": ["تحاليل", "معمل", "تحليل", "مختبر", "مستشفى", "نتيجه"],
         "delayedAnalyze": ["سكر", "سكرى", "جلوكوز", "glucose", "sugar", "ضغط", "ضغط الدم", "blood pressure", "bp", "نبض", "pulse", "heart rate", "hr", "حراره", "درجه حراره", "temperature", "temp", "اكسجين", "تشبع", "تشبع اكسجين", "oxygen", "o2", "spo2", "تنفس", "respiratory", "respiration", "rr", "وزن", "weight", "طول", "height"],
@@ -11647,9 +11647,7 @@ data-full="${encodeURIComponent(item.fullText || item.text)}">
     function superAnalyze() {
       const input = document.getElementById("myInput").value;
       const arabicRegex = /[\u0600-\u06FF]/;
-      const intentKeywords = ["اعرب", "اعراب", "موقعها", "نوع الكلمة", "بين علامة", "محلها", "استخرج", "استخراج", "حدد", "طلع", "بين نوع", "ماهيه"];
-      const hasIntent = intentKeywords.some(keyword => input.includes(keyword));
-      if (!arabicRegex.test(input) || !hasIntent) { return; }
+      if (!arabicRegex.test(input)) { return; }
       const words = input.split(/\s+/).filter((w) => w.length > 0);
       const groups = {
         "الحروف والأدوات": { words: [], reminder: "⚠️ <b>القاعدة:</b>الحروف كلمات لا يظهر معناها إلا مع غيرها..." },
@@ -11692,6 +11690,7 @@ data-full="${encodeURIComponent(item.fullText || item.text)}">
         }
       });
       let resultsHTML = "";
+      const rekonahow = document.getElementById('rekonahow');
       for (let [type, data] of Object.entries(groups)) {
         if (data.words.length > 0) {
           resultsHTML += `
@@ -11707,8 +11706,11 @@ data-full="${encodeURIComponent(item.fullText || item.text)}">
         }
       }
       if (resultsHTML !== "") {
-        UI.replay.innerHTML += `<p>بالنسبه لـ الإعراب انا لاقيت :</p>` + resultsHTML;
+        rekonahow.style.display = "none";
+        rekonahow.innerHTML = `<p>بالنسبه لـ الإعراب انا لاقيت :</p>` + resultsHTML;
+        showAndMove('rekonahow');
       } else {
+        rekonahow.style.display = "none";
         return;
       }
     }
@@ -12912,7 +12914,10 @@ ${childCount > 0 ? `<span class="count-badge">${childCount}</span>` : ""}
         reportHTML += `</ul>`;
       }
       reportHTML += `</fieldset>`;
-      UI.replay.insertAdjacentHTML("beforeend", reportHTML);
+      const dicnopEl = document.getElementById('dicnop');
+      dicnopEl.style.display = "none";
+      dicnopEl.innerHTML = reportHTML;
+      showAndMove('dicnop');
     }
   }
   //محلل القانون
